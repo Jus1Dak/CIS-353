@@ -55,3 +55,16 @@ SELECT
 FROM recipes r
 LEFT JOIN recipe_ingredients ri ON r.recipe_id = ri.recipe_id
 GROUP BY r.recipe_id;
+
+CREATE OR REPLACE VIEW top_meals_consumed AS
+SELECT 
+    m.meal_id,
+    m.name AS meal_name,
+    COUNT(fl.meal_id) AS times_consumed,
+    SUM(fl.calories) AS total_calories,
+    ROUND(AVG(fl.calories), 2) AS avg_calories
+FROM meals m
+JOIN food_log fl ON fl.meal_id = m.meal_id
+GROUP BY m.meal_id, m.name
+ORDER BY times_consumed DESC;
+

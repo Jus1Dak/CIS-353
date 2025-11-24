@@ -58,7 +58,7 @@ BEGIN
     SELECT COUNT(*) INTO log_count
     FROM food_log
     WHERE user_id = NEW.user_id
-      AND DATE(eaten_at) = DATE(NEW.eaten_at);
+      AND log_date = NEW.log_date;
 
     IF log_count >= 20 THEN
         RAISE EXCEPTION 'You cannot log more than 20 items in a single day.';
@@ -70,5 +70,6 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trg_limit_daily_logs
 BEFORE INSERT ON food_log
-FOR EACH ROW EXECUTE FUNCTION limit_daily_logs();
+FOR EACH ROW
+EXECUTE FUNCTION limit_daily_logs();
 
